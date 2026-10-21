@@ -342,7 +342,7 @@ function finish(reason='caught'){
 }
 function restartGame(){
   score=0;walkTime=0;won=false;toastTime=0;nextSpawn=collectibles.length;lives=3;invincible=0;gameOver=false;jumpVelocity=0;onGround=true;jumpsUsed=0;slideTime=0;stepCooldown=0;
-  petr.position.set(0,0,0);petr.rotation.set(0,0,0);petr.visible=true;
+  petr.position.set(0,0,0);petr.rotation.set(0,Math.PI,0);petr.visible=true;
   victoria.position.set(0,0,6.8);
 victoria.rotation.set(0,0,0);
   for(const obstacle of obstacles){obstacle.hit=false;obstacle.mesh.position.z=obstacle.mesh.userData.initialZ??obstacle.mesh.position.z;}
@@ -367,7 +367,7 @@ victoria.rotation.set(0,0,0);
 }
 document.getElementById('restart').addEventListener('click',restartGame);
 function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;const swipeActive=touchMode&&performance.now()<swipeSideUntil;const direction=new THREE.Vector3(Number(!!keys.d)-Number(!!keys.a)+(swipeActive?swipeSide:0),0,Number(!!keys.s)-Number(!!keys.w)-(touchMode&&!gameOver?1:0));const moving=!gameOver&&direction.lengthSq()>0;
-if(moving){direction.normalize();petr.position.addScaledVector(direction,6*dt);petr.position.x=THREE.MathUtils.clamp(petr.position.x,-4.5,4.5);petr.position.z=THREE.MathUtils.clamp(petr.position.z,-(TOTAL*SPACING+20),9);const angle=Math.atan2(-direction.x,-direction.z);petr.rotation.y+=Math.atan2(Math.sin(angle-petr.rotation.y),Math.cos(angle-petr.rotation.y))*Math.min(1,dt*12);walkTime+=dt*11}
+if(moving){direction.normalize();petr.position.addScaledVector(direction,6*dt);petr.position.x=THREE.MathUtils.clamp(petr.position.x,-4.5,4.5);petr.position.z=THREE.MathUtils.clamp(petr.position.z,-(TOTAL*SPACING+20),9);const angle=Math.atan2(-direction.x,-direction.z)+Math.PI;petr.rotation.y+=Math.atan2(Math.sin(angle-petr.rotation.y),Math.cos(angle-petr.rotation.y))*Math.min(1,dt*12);walkTime+=dt*11}
 if(!gameOver&&!onGround){jumpVelocity-=21*dt;petr.position.y+=jumpVelocity*dt;
  if(petr.position.y<=0){petr.position.y=0;jumpVelocity=0;onGround=true;jumpsUsed=0;sound(130,.1,'triangle',.045,70)}}
 slideTime=Math.max(0,slideTime-dt);
